@@ -1,0 +1,53 @@
+{% extends "core/base.html" %}
+{% block title %}Login - Gestão TCC{% endblock %}
+
+{% block content %}
+<div style="min-height: 70vh; display: flex; align-items: center;">
+    <div class="row justify-content-center w-100">
+        <div class="col-md-5 col-lg-4">
+            <!-- Modern login card with gradient accent -->
+            <div class="card" style="border-top: 4px solid #4f46e5; box-shadow: 0 20px 25px -5px rgba(79, 70, 229, 0.1);">
+                <div class="card-body p-4">
+                    <div style="text-align: center; margin-bottom: 2rem;">
+                        <div style="font-size: 3rem; margin-bottom: 0.5rem;">📚</div>
+                        <h2 style="font-size: 1.75rem; margin-bottom: 0.5rem;">Bem-vindo</h2>
+                        <p style="color: #64748b;">Acesse sua conta para continuar</p>
+                    </div>
+                    
+                    <form method="post" novalidate>
+                        {% csrf_token %}
+                        
+                        {% if form.non_field_errors %}
+                        <div class="alert alert-danger mb-3">
+                            {{ form.non_field_errors }}
+                        </div>
+                        {% endif %}
+                        
+                        <div class="mb-3">
+                            <label for="{{ form.username.id_for_label }}" class="form-label">Usuário</label>
+                            {{ form.username }}
+                            {% if form.username.errors %}
+                            <div class="text-danger small mt-1">{{ form.username.errors }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label for="{{ form.password.id_for_label }}" class="form-label">Senha</label>
+                            {{ form.password }}
+                            {% if form.password.errors %}
+                            <div class="text-danger small mt-1">{{ form.password.errors }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary w-100 mb-3" style="padding: 0.75rem; font-weight: 600;">Entrar</button>
+                    </form>
+                    
+                    <div style="text-align: center; border-top: 1px solid #e2e8f0; padding-top: 1.5rem;">
+                        <p style="margin-bottom: 0; color: #64748b;">Não tem conta? <a href="{% url 'core:register' %}" style="color: #4f46e5; font-weight: 600;">Cadastrar</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

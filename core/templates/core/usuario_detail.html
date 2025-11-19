@@ -1,0 +1,53 @@
+{% extends "core/base.html" %}
+{% block title %}{{ usuario.nome_completo }} - Detalhes{% endblock %}
+
+{% block content %}
+<h2>Detalhes do usuário</h2>
+
+<div class="card mb-4">
+    <div class="card-body">
+        <h4 class="card-title">{{ usuario.nome_completo }}</h4>
+        <p class="card-text mb-1"><strong>Tipo:</strong> {{ usuario.get_tipo_display }}</p>
+        <p class="card-text mb-1"><strong>E-mail:</strong> {{ usuario.email }}</p>
+        {% if usuario.matricula %}
+        <p class="card-text mb-1"><strong>Matrícula:</strong> {{ usuario.matricula }}</p>
+        {% endif %}
+        {% if usuario.area_atuacao %}
+        <p class="card-text mb-1"><strong>Área de atuação:</strong> {{ usuario.area_atuacao }}</p>
+        {% endif %}
+        <p class="card-text mb-1"><strong>Ativo:</strong> {{ usuario.is_active|yesno:"Sim,Não" }}</p>
+
+        {% if request.user.tipo == "ADMIN" %}
+        <a href="{% url 'core:usuario_update' usuario.pk %}" class="btn btn-primary mt-2">
+            Editar usuário
+        </a>
+        {% endif %}
+    </div>
+</div>
+
+<h3>Temas vinculados</h3>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Título</th>
+            <th>Aluno</th>
+            <th>Orientador</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for t in temas %}
+        <tr>
+            <td>{{ t.titulo }}</td>
+            <td>{{ t.aluno.nome_completo }}</td>
+            <td>{{ t.orientador.nome_completo }}</td>
+            <td>{{ t.get_status_display }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="4">Nenhum tema vinculado.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

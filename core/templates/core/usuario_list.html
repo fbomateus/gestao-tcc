@@ -1,0 +1,43 @@
+{% extends "core/base.html" %}
+{% block title %}Usuários - Gestão TCC{% endblock %}
+
+{% block content %}
+<h2>Usuários</h2>
+
+<a href="{% url 'core:usuario_create' %}" class="btn btn-success mb-3">Novo usuário</a>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Nome</th>
+            <th>Tipo</th>
+            <th>E-mail</th>
+            <th>Matrícula</th>
+            <th>Área de atuação</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for u in usuarios %}
+        <tr>
+            <td>
+                <a href="{% url 'core:usuario_detail' u.id %}">
+                    {{ u.nome_completo }}
+                </a>
+            </td>
+            <td>{{ u.get_tipo_display }}</td>
+            <td>{{ u.email }}</td>
+            <td>{{ u.matricula|default:"-" }}</td>
+            <td>{{ u.area_atuacao|default:"-" }}</td>
+            <td>
+                <a href="{% url 'core:usuario_update' u.id %}" class="btn btn-sm btn-primary">Editar</a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="6">Nenhum usuário cadastrado.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

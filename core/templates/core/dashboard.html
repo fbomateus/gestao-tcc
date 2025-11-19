@@ -1,0 +1,161 @@
+{% extends "core/base.html" %}
+{% block title %}Dashboard - Gestão TCC{% endblock %}
+
+{% block content %}
+<!-- Modern dashboard header -->
+<div class="row mb-5">
+    <div class="col-12">
+        <h1 style="color: #0f172a;">Dashboard</h1>
+        <p style="color: #64748b; font-size: 1.05rem; margin-top: 0.5rem;">Bem-vindo, <strong>{{ user.nome_completo|default:user.username }}</strong></p>
+    </div>
+</div>
+
+{% if tipo_dashboard == "aluno" %}
+<!-- Aluno Dashboard -->
+<div class="row mb-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0">📝 Meus Temas</h4>
+            </div>
+            <div class="card-body">
+                <a href="{% url 'tcc:tema_create' %}" class="btn btn-primary btn-sm mb-3">+ Novo Tema</a>
+                <div class="list-group">
+                    {% for tema in temas %}
+                    <div class="list-group-item">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <h5 class="mb-1">{{ tema.titulo }}</h5>
+                                <p class="text-secondary small mb-0">
+                                    Orientador: <strong>{{ tema.orientador|default:"(não definido)" }}</strong>
+                                </p>
+                            </div>
+                            <span class="badge bg-primary">{{ tema.get_status_display }}</span>
+                        </div>
+                        <a href="{% url 'tcc:entrega_list' tema.id %}" class="btn btn-outline-primary btn-sm mt-2">Ver entregas</a>
+                    </div>
+                    {% empty %}
+                    <div class="text-center py-4">
+                        <p class="text-secondary">Você ainda não possui temas</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0">📤 Últimas Entregas</h4>
+            </div>
+            <div class="card-body">
+                <div class="list-group">
+                    {% for e in entregas %}
+                    <div class="list-group-item">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <h5 class="mb-1">{{ e.titulo }}</h5>
+                                <p class="text-secondary small mb-1">Tema: {{ e.tema.titulo }}</p>
+                                <p class="text-secondary small mb-0">{{ e.data_entrega|date:"d/m/Y H:i" }}</p>
+                            </div>
+                            {% if e.nota %}
+                            <span class="badge bg-success">Nota: {{ e.nota }}</span>
+                            {% else %}
+                            <span class="badge bg-warning">Pendente</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div class="text-center py-4">
+                        <p class="text-secondary">Nenhuma entrega ainda</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% elif tipo_dashboard == "orientador" %}
+<!-- Orientador Dashboard -->
+<div class="row mb-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0">📚 Temas que você orienta</h4>
+            </div>
+            <div class="card-body">
+                <div class="list-group">
+                    {% for tema in temas %}
+                    <div class="list-group-item">
+                        <h5 class="mb-1">{{ tema.titulo }}</h5>
+                        <p class="text-secondary small mb-2">Aluno: <strong>{{ tema.aluno }}</strong></p>
+                        <a href="{% url 'tcc:entrega_list' tema.id %}" class="btn btn-outline-primary btn-sm">Ver entregas</a>
+                    </div>
+                    {% empty %}
+                    <div class="text-center py-4">
+                        <p class="text-secondary">Nenhum tema orientado</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0">⚠️ Entregas pendentes</h4>
+            </div>
+            <div class="card-body">
+                <div class="list-group">
+                    {% for e in entregas_pendentes %}
+                    <div class="list-group-item">
+                        <h5 class="mb-1">{{ e.titulo }}</h5>
+                        <p class="text-secondary small mb-2">{{ e.tema.titulo }} ({{ e.tema.aluno }})</p>
+                        <a href="{% url 'tcc:entrega_feedback' e.id %}" class="btn btn-primary btn-sm">Avaliar agora</a>
+                    </div>
+                    {% empty %}
+                    <div class="text-center py-4">
+                        <p class="text-secondary">Nenhuma entrega pendente</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% else %}
+<!-- Admin Dashboard -->
+<div class="row">
+    <div class="col-md-4 mb-4">
+        <div class="card text-center">
+            <div class="card-body" style="padding: 2rem 1.5rem;">
+                <h2 style="color: #4f46e5; margin-bottom: 0.5rem; font-size: 2.5rem;">{{ total_usuarios }}</h2>
+                <p style="color: #64748b; margin-bottom: 0; font-weight: 600;">👥 Usuários</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4 mb-4">
+        <div class="card text-center">
+            <div class="card-body" style="padding: 2rem 1.5rem;">
+                <h2 style="color: #4f46e5; margin-bottom: 0.5rem; font-size: 2.5rem;">{{ total_temas }}</h2>
+                <p style="color: #64748b; margin-bottom: 0; font-weight: 600;">📚 Temas</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4 mb-4">
+        <div class="card text-center">
+            <div class="card-body" style="padding: 2rem 1.5rem;">
+                <h2 style="color: #4f46e5; margin-bottom: 0.5rem; font-size: 2.5rem;">{{ total_entregas }}</h2>
+                <p style="color: #64748b; margin-bottom: 0; font-weight: 600;">📤 Entregas</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

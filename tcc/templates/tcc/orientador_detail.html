@@ -1,0 +1,34 @@
+{% extends "core/base.html" %}
+{% block title %}Orientador - {{ orientador.nome_completo|default:orientador.username }}{% endblock %}
+
+{% block content %}
+<h2>Orientador</h2>
+
+<div class="card mb-3">
+    <div class="card-body">
+        <h4 class="card-title">{{ orientador.nome_completo|default:orientador.username }}</h4>
+        <p class="card-text">
+            <strong>E-mail:</strong> {{ orientador.email|default:"-" }}<br>
+            <strong>Área de atuação:</strong> {{ orientador.area_atuacao|default:"-" }}
+        </p>
+    </div>
+</div>
+
+<h3>Temas orientados</h3>
+<ul class="list-group">
+    {% for tema in temas %}
+    <li class="list-group-item">
+        <strong>{{ tema.titulo }}</strong><br>
+        <small>Aluno: {{ tema.aluno }}</small><br>
+        <span class="badge bg-secondary">{{ tema.get_status_display }}</span>
+        <a href="{% url 'tcc:entrega_list' tema.id %}" class="btn btn-sm btn-outline-primary float-end">
+            Ver entregas
+        </a>
+    </li>
+    {% empty %}
+    <li class="list-group-item">Nenhum tema orientado ainda.</li>
+    {% endfor %}
+</ul>
+
+<a href="{% url 'tcc:orientador_list' %}" class="btn btn-link mt-3">Voltar à lista de orientadores</a>
+{% endblock %}

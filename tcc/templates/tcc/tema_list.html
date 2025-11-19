@@ -1,0 +1,60 @@
+{% extends "core/base.html" %}
+{% block title %}Temas de TCC{% endblock %}
+
+{% block content %}
+<!-- Modern page header with action button -->
+<div class="d-flex justify-content-between align-items-center mb-5">
+    <div>
+        <h1 style="color: #0f172a;">Temas de TCC</h1>
+        <p style="color: #64748b; margin-top: 0.5rem;">Gerenciar e visualizar todos os temas</p>
+    </div>
+    {% if user.tipo == "ALUNO" %}
+        <a href="{% url 'tcc:tema_create' %}" class="btn btn-primary">+ Novo Tema</a>
+    {% endif %}
+</div>
+
+<div class="card">
+    <div class="table-responsive">
+        <table class="table mb-0">
+            <thead>
+                <tr>
+                    <th>Título</th>
+                    <th>Aluno</th>
+                    <th>Orientador</th>
+                    <th>Status</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for tema in temas %}
+                <tr>
+                    <td><strong style="color: #0f172a;">{{ tema.titulo }}</strong></td>
+                    <td style="color: #64748b;">{{ tema.aluno }}</td>
+                    <td style="color: #64748b;">{{ tema.orientador|default:"-" }}</td>
+                    <td>
+                        {% if tema.status == "APROVADO" %}
+                            <span class="badge bg-success">{{ tema.get_status_display }}</span>
+                        {% elif tema.status == "PENDENTE" %}
+                            <span class="badge bg-warning">{{ tema.get_status_display }}</span>
+                        {% else %}
+                            <span class="badge bg-danger">{{ tema.get_status_display }}</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="{% url 'tcc:entrega_list' tema.id %}" class="btn btn-sm btn-outline-primary">Entregas</a>
+                        {% if user.tipo == "ALUNO" and tema.aluno == user %}
+                            <a href="{% url 'tcc:tema_update' tema.id %}" class="btn btn-sm btn-warning">Editar</a>
+                            <a href="{% url 'tcc:tema_delete' tema.id %}" class="btn btn-sm btn-danger">Excluir</a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% empty %}
+                <tr><td colspan="5" class="text-center py-4" style="color: #64748b;">Nenhum tema encontrado</td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<a href="{% url 'core:dashboard' %}" class="btn btn-link mt-3">← Voltar ao dashboard</a>
+{% endblock %}

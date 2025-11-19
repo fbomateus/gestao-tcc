@@ -1,0 +1,39 @@
+{% extends "core/base.html" %}
+{% block title %}Orientadores{% endblock %}
+
+{% block content %}
+<h2>Lista de Orientadores</h2>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Nome</th>
+            <th>E-mail</th>
+            <th>Área de atuação</th>
+            <th>Temas orientados</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for o in orientadores %}
+        <tr>
+            <td>{{ o.nome_completo|default:o.username }}</td>
+            <td>{{ o.email }}</td>
+            <td>{{ o.area_atuacao|default:"-" }}</td>
+            <td>{{ o.tccs_orientador.count }}</td>
+            <td>
+                <a href="{% url 'tcc:orientador_detail' o.id %}" class="btn btn-sm btn-primary">
+                    Detalhes
+                </a>
+            </td>
+        </tr>
+    {% empty %}
+        <tr>
+            <td colspan="5">Nenhum orientador cadastrado.</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<a href="{% url 'core:dashboard' %}" class="btn btn-link">Voltar ao dashboard</a>
+{% endblock %}

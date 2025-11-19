@@ -1,0 +1,22 @@
+# Ambiente virtual
+venv/
+.venv/
+
+# Arquivos de banco local
+db.sqlite3
+
+# Cache do Python
+__pycache__/
+*.pyc
+
+# Arquivos de sistema
+.DS_Store
+
+# Arquivos de mídia (uploads)
+media/
+
+# Static collectado em produção
+staticfiles/
+
+# Variáveis de ambiente
+.env

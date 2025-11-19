@@ -1,0 +1,29 @@
+{% extends "core/base.html" %}
+{% block title %}Tema de TCC{% endblock %}
+
+{% block content %}
+<h2>{% if object %}Editar Tema{% else %}Novo Tema{% endif %}</h2>
+<form method="post" class="mt-3">
+    {% csrf_token %}
+    {% for field in form %}
+    <div class="mb-3">
+        <label class="form-label">
+        {{ field.label }}
+        {% if field.field.required %}
+            <span class="text-danger">*</span>
+        {% endif %}
+        </label>
+        {{ field }}
+        {% if field.help_text %}
+        <div class="form-text">{{ field.help_text|safe }}</div>
+        {% endif %}
+        {% for error in field.errors %}
+        <div class="text-danger">{{ error }}</div>
+        {% endfor %}
+    </div>
+    {% endfor %}
+
+    <button type="submit" class="btn btn-success">Salvar</button>
+    <a href="{% url 'tcc:tema_list' %}" class="btn btn-secondary">Cancelar</a>
+</form>
+{% endblock %}

@@ -1,0 +1,63 @@
+{% extends "core/base.html" %}
+{% block title %}Entregas - {{ tema.titulo }}{% endblock %}
+
+{% block content %}
+<!-- Modern entrega list header -->
+<div class="mb-5">
+    <a href="{% url 'tcc:tema_list' %}" class="btn btn-link" style="margin-bottom: 1rem; display: inline-block;">← Voltar aos temas</a>
+    <h1 style="color: #0f172a;">Entregas</h1>
+    <p style="color: #64748b; margin-top: 0.5rem;">Tema: <strong style="color: #0f172a;">{{ tema.titulo }}</strong></p>
+</div>
+
+<div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h4 class="mb-0">📤 Lista de Entregas</h4>
+        {% if user.tipo == "ALUNO" and tema.aluno == user %}
+            <a href="{% url 'tcc:entrega_create' tema.id %}" class="btn btn-primary btn-sm">+ Nova Entrega</a>
+        {% endif %}
+    </div>
+    
+    <div class="table-responsive">
+        <table class="table mb-0">
+            <thead>
+                <tr>
+                    <th>Título</th>
+                    <th>Data</th>
+                    <th>Arquivo</th>
+                    <th>Nota</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for e in entregas %}
+                <tr>
+                    <td><strong style="color: #0f172a;">{{ e.titulo }}</strong></td>
+                    <td style="color: #64748b;">{{ e.data_entrega|date:"d/m/Y H:i" }}</td>
+                    <td>
+                        {% if e.arquivo %}
+                            <a href="{{ e.arquivo.url }}" target="_blank" class="btn btn-link btn-sm">📥 Download</a>
+                        {% else %}
+                            <span style="color: #64748b;">-</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if e.nota %}
+                            <span class="badge bg-success">{{ e.nota }}</span>
+                        {% else %}
+                            <span class="badge bg-warning">Pendente</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if user.tipo == "ORIENTADOR" and tema.orientador == user or user.tipo == "ADMIN" %}
+                            <a href="{% url 'tcc:entrega_feedback' e.id %}" class="btn btn-sm btn-primary">Feedback</a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% empty %}
+                <tr><td colspan="5" class="text-center py-4" style="color: #64748b;">Nenhuma entrega ainda</td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends "core/base.html" %}
+{% block title %}Excluir Tema{% endblock %}
+
+{% block content %}
+<h2>Excluir Tema</h2>
+
+<p>Tem certeza de que deseja excluir o tema abaixo?</p>
+
+<div class="card mb-3">
+    <div class="card-body">
+        <h5 class="card-title">{{ object.titulo }}</h5>
+        <p class="card-text">{{ object.descricao }}</p>
+        <p class="card-text">
+            <strong>Aluno:</strong> {{ object.aluno }}<br>
+            <strong>Orientador:</strong> {{ object.orientador|default:"-" }}<br>
+            <strong>Status:</strong> {{ object.get_status_display }}
+        </p>
+    </div>
+</div>
+
+<form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Sim, excluir</button>
+    <a href="{% url 'tcc:tema_list' %}" class="btn btn-secondary">Cancelar</a>
+</form>
+{% endblock %}
