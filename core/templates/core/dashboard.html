@@ -57,7 +57,7 @@
                             <div>
                                 <h5 class="mb-1">{{ e.titulo }}</h5>
                                 <p class="text-secondary small mb-1">Tema: {{ e.tema.titulo }}</p>
-                                <p class="text-secondary small mb-0">{{ e.data_entrega|date:"d/m/Y H:i" }}</p>
+                                <p class="text-secondary small mb-0">{{ e.data_entrega|date:"d/m/Y" }}</p>
                             </div>
                             {% if e.nota %}
                             <span class="badge bg-success">Nota: {{ e.nota }}</span>

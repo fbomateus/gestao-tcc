@@ -32,7 +32,7 @@
             {% for e in entregas %}
                 <tr>
                     <td><strong style="color: #0f172a;">{{ e.titulo }}</strong></td>
-                    <td style="color: #64748b;">{{ e.data_entrega|date:"d/m/Y H:i" }}</td>
+                    <td style="color: #64748b;">{{ e.data_entrega|date:"d/m/Y" }}</td>
                     <td>
                         {% if e.arquivo %}
                             <a href="{{ e.arquivo.url }}" target="_blank" class="btn btn-link btn-sm">📥 Download</a>
